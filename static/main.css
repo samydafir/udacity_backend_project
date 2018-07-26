@@ -1,0 +1,9 @@
+
+.main {
+  position:relative;
+  top:70px;
+  width:70%;
+  margin: auto;
+  padding:1%;
+  border: 1px groove black;
+}

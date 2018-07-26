@@ -1,0 +1,11 @@
+{% extends "main.html" %}
+{% block content %}
+<form method="POST" action="/manufacturers/{{manufacturer.id}}/edit">
+  <label for="name">Manufacturer name</label>
+    <br>
+  	<input type="text" name="name" placeholder="{{manufacturer.name}}">
+    <br>
+    <br>
+    <input type="submit" class="btn btn-secondary" value="submit">
+</form>
+{% endblock %}

@@ -1,0 +1,10 @@
+{% extends "main.html" %}
+{% block content %}
+<h4>Do you really want to delete the manufacturer: {{manufacturer.name}}</h4>
+<form method="POST" action="/manufacturers/{{manufacturer.id}}/delete">
+    confirm: <input type="checkbox" name="confirmed">
+    <br>
+    <br>
+    <input type="submit" class="btn btn-danger" value="Delete">
+</form>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends "main.html" %}
+{% block content %}
+<form method="POST" action="{{url_for('editAircraft',
+  man_id = aircraft.manufacturer_id, aircraft_id = aircraft.id)}}">
+    Name:<br>
+  	<input type="text" name="name" placeholder="{{aircraft.name}}"><br>
+    Description:<br>
+    <input type="text" name="desc" placeholder="{{aircraft.description}}"><br>
+    Price (US$):<br>
+    <input type="text" name="price" placeholder="{{aircraft.price}}"><br>
+    Range (nm):<br>
+    <input type="text" name="range" placeholder="{{aircraft.range}}"><br>
+    Aircraft Picture (URL):<br>
+    <input type="text" name="picture" placeholder="{{aircraft.picture}}"><br>
+    <br>
+    <input type="submit" class="btn btn-secondary" value="submit">
+</form>
+{% endblock %}

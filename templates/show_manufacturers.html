@@ -1,0 +1,27 @@
+{% extends "main.html" %}
+{% block content %}
+<a href="/manufacturers/new"
+  class="btn btn-secondary">Add new Manufacturer</a>
+<br>
+<br>
+{% for manufacturer in manufacturers %}
+  <h3>{{manufacturer.name}}</h3>
+
+  <a href = "{{url_for('showAircraft', man_id = manufacturer.id)}}"
+  class="btn btn-outline-secondary">
+    Show aircraft
+  </a>
+  <a href = "{{url_for('editManufacturer', man_id = manufacturer.id)}}"
+  class="btn btn-outline-secondary">
+    Edit Manufacturer
+  </a>
+  <a href = "{{url_for('deleteManufacturer', man_id = manufacturer.id)}}"
+  class="btn btn-outline-secondary">
+    Delete Manufacturer
+  </a>
+  <br>
+  <br>
+
+{% endfor %}
+
+{% endblock %}

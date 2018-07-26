@@ -1,0 +1,33 @@
+{% extends "main.html" %}
+{% block content %}
+<a href="/manufacturers/{{man_id}}/new"
+  class="btn btn-outline-secondary">Add new Aircraft</a>
+<br>
+<br>
+{% for ac in aircraft %}
+<div>
+  <h3>{{ac.name}}</h3>
+  <a href="{{ac.picture}}">
+    <img src="{{ac.picture}}" alt="aircraft picture" height=100px style="float:right;">
+  </a>
+  <ul>
+    <li>Name: {{ac.name}}</li>
+    <li>ID: {{ac.id}}</li>
+    <li>Description: {{ac.description}}</li>
+    <li>Price: US$ {{ac.price}}</li>
+    <li>Range: {{ac.range}} nm</li>
+  </ul>
+  <a href = "{{url_for('editAircraft', man_id = ac.manufacturer_id,
+    aircraft_id = ac.id)}}" class="btn btn-outline-secondary">
+    Edit Aircraft
+  </a>
+  <a href = "{{url_for('deleteAircraft', man_id = ac.manufacturer_id,
+    aircraft_id = ac.id)}}" class="btn btn-outline-secondary">
+    Delete Aircraft
+  </a>
+  <br>
+  <br>
+</div>
+{% endfor %}
+
+{% endblock %}

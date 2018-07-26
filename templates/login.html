@@ -1,0 +1,63 @@
+{% extends "main.html" %}
+{% block content %}
+  <!--LOAD PRE-REQUISITES FOR GOOGLE SIGN IN -->
+   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js">
+  </script>
+
+<script src="//apis.google.com/js/platform.js?onload=start"> </script>
+
+<!-- END PRE-REQUISITES FOR GOOGLE SIGN IN -->
+
+
+</head>
+<body>
+
+  <!-- GOOGLE PLUS SIGN IN BUTTON-->
+    <br>
+    <div id="signinButton">
+      <span class="g-signin"
+        data-scope="profile email"
+        data-clientid="82572382471-a5rmmf4phnqpkh6m6i0sjpgtlokr0f49.apps.googleusercontent.com"
+        data-redirecturi="postmessage"
+        data-accesstype="offline"
+        data-cookiepolicy="single_host_origin"
+        data-callback="signInCallback"
+        data-approvalprompt="force">
+      </span>
+    </div>
+
+    <div id="result">
+    </div>
+
+  <!--END GOOGLE PLUS SIGN IN BUTTON -->
+
+  <script>
+
+  function signInCallback(authResult) {
+    if (authResult['code']) {
+        $('#signinButton').attr('style', 'display:none');
+        $.ajax({
+          type: 'POST',
+          url: '/login?token={{TOKEN}}',
+          processData: false,
+          contentType: 'application/octet-stream; charset:utf-8',
+          data: authResult['code'],
+          success: function(result) {
+            if(result) {
+              $('#result').html('Login Successful!<br>' + result +
+                '<br>Redirecting to main page...');
+              setTimeout(function() {
+                window.location.href = "/manufacturers";
+              }, 2500);
+            } else {
+              console.log("Error: " + authResult['error']);
+            }
+          }
+        });
+      } else {
+        $('#result').html("failure. Check console and config!")
+      }
+    }
+  </script>
+
+  {% endblock %}

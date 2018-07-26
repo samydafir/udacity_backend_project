@@ -1,0 +1,9 @@
+{% extends "main.html" %}
+{% block content %}
+  You have been logged out successfully!
+  <script>
+    setTimeout(function(){
+      window.location.href="/manufacturers";
+    }, 1500);
+  </script>
+{% endblock %}

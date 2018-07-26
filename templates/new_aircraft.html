@@ -1,0 +1,23 @@
+{% extends "main.html" %}
+{% block content %}
+
+<form method="POST" action="{{url_for('newAircraft', man_id = man_id)}}">
+  Name:<br>
+  <input type="text" name="name">
+  <br>
+  Description:<br>
+  <input type="text" name="description">
+  <br>
+  Price (US$):<br>
+  <input type="text" name="price">
+  <br>
+  Range (nm):<br>
+  <input type="text" name="range">
+  <br>
+  Aircraft Picture (URL):<br>
+  <input type="text" name="picture">
+  <br>
+  <br>
+  <input type="submit" class="btn btn-secondary" value="submit">
+</form>
+{% endblock %}

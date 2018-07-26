@@ -1,0 +1,12 @@
+{% extends "main.html" %}
+{% block content %}
+<h4>Do you really want to delete the aircraft: {{aircraft.name}}?</h4>
+<form method="POST" action="{{url_for('deleteAircraft',
+  man_id = aircraft.manufacturer_id, aircraft_id = aircraft.id)}}">
+    <br>
+    confirm <input type="checkbox" name="confirmed">
+    <br>
+    <br>
+    <input type="submit" class="btn btn-danger" value="Delete">
+</form>
+{% endblock %}
