@@ -35,9 +35,7 @@ class Manufacturer(Base):
     def serialize(self):
         """Return object data in easily serializeable format"""
         return {
-            'name':         self.name,
-            'id':           self.id,
-            'user_id':      self.user_id
+            'name':         self.name
         }
 
 
@@ -60,10 +58,8 @@ class Aircraft(Base):
         return {
             'name':         self.name,
             'description':  self.description,
-            'id':           self.id,
             'price':        self.price,
             'range':        self.range,
-            'user_id':      self.user_id,
             'picture':      self.picture
         }
 

@@ -19,6 +19,12 @@ It includes following features:
 + Aircraft or Manufacturers may only be edited or deleted by the user who created
   them
 
+### Additional features
++ Insert, Delete and Edit operations are protected by a CSRF token check. For
+  simplicity the token created during the login-procedure is used.
+  The token is delivered to the client when calling the GET part and checked
+  in the POST part of the respective functions.
+
 ### Technical Requirements and used Components
 + Python3
 + SQLite3
@@ -26,14 +32,15 @@ It includes following features:
 + Flask
 + Bootstrap
 
+
 ### Running the application
-+ Run `python database_setup.py` to set up the database
++ Run `python database_setup.py` to set up the database.
 + Start the server by executing project.py: `python project.py`
-+ project.py listens to incoming connections on port 8000
++ project.py listens for incoming requests on port 8000
 
 
 ### Disclaimer
 + The login part (route "/login") was taken directly from the code previously
-  implemented in the OAuth lesson of this course.
+  implemented in the OAuth lessons of this course.
 + Images are only saved as URLs. Currently all aircraft images are taken from
   wikimedia commons.

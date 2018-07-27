@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 from flask import Flask, render_template, request, redirect, jsonify, url_for
-from sqlalchemy import create_engine, asc
+from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Manufacturer, Aircraft, User
 from flask import session as login_session
@@ -12,11 +12,9 @@ import json
 import random
 import string
 from flask import make_response
-from flask_httpauth import HTTPBasicAuth
 import requests
 
 app = Flask(__name__)
-auth = HTTPBasicAuth()
 
 # Connect to Database and create database session
 engine = create_engine('sqlite:///itemcatalog.db')
@@ -131,7 +129,6 @@ def login():
         output += login_session['picture']
         output += ' " style = "width: 150px; height: 150px;border-radius: 50%;'
         output += '-webkit-border-radius: 150px;-moz-border-radius: 150px;">'
-        print "done!"
         return output
 
 
@@ -190,9 +187,11 @@ def newManufacturer():
     if "user_id" in login_session:
         if request.method == "GET":
             return render_template(
-                'new_manufacturer.html', pageTitle="Create new Manufacturer")
+                'new_manufacturer.html', pageTitle="Create new Manufacturer",
+                TOKEN=login_session['token'])
         else:
-            if request.form['name']:
+            if request.form['name'] and \
+                    request.form['token'] == login_session['token']:
                 newMan = Manufacturer(
                     name=request.form['name'],
                     user_id=login_session['user_id'])
@@ -218,9 +217,11 @@ def editManufacturer(man_id):
             if request.method == "GET":
                 return render_template(
                     'edit_manufacturer.html', pageTitle="Edit Manufacturer",
-                    manufacturer=manufacturer)
+                    manufacturer=manufacturer,
+                    TOKEN=login_session['token'])
             else:
-                if request.form['name']:
+                if request.form['name'] and \
+                        request.form['token'] == login_session['token']:
                     manufacturer.name = request.form['name']
                     session.add(manufacturer)
                     session.commit()
@@ -245,12 +246,15 @@ def deleteManufacturer(man_id):
                     id=man_id).first()
                 return render_template(
                     'delete_manufacturer.html',
-                    pageTitle="Delete Manufacturer", manufacturer=manufacturer)
+                    pageTitle="Delete Manufacturer", manufacturer=manufacturer,
+                    TOKEN=login_session['token'])
             else:
-                if request.form['confirmed']:
+                if "confirmed" in request.form and \
+                        request.form['token'] == login_session['token']:
                     session.delete(manufacturer)
                     session.commit()
                     return redirect(url_for('showManufacturers'))
+                return redirect(url_for('deleteManufacturer', man_id=man_id))
 
     return redirect(url_for('login'))
 
@@ -293,8 +297,8 @@ def editAircraft(man_id, aircraft_id):
                 return render_template(
                     'edit_aircraft.html',
                     pageTitle="Edit Aircraft: " + aircraft.name,
-                    aircraft=aircraft)
-            else:
+                    aircraft=aircraft, TOKEN=login_session['token'])
+            elif request.form['token'] == login_session['token']:
                 if request.form['name']:
                     aircraft.name = request.form['name']
                 if request.form['desc']:
@@ -333,14 +337,17 @@ def deleteAircraft(man_id, aircraft_id):
                 return render_template(
                     'delete_aircraft.html',
                     pageTitle="Delete Aircraft: " + aircraft.name,
-                    aircraft=aircraft)
+                    aircraft=aircraft, TOKEN=login_session['token'])
             else:
-                if request.form['confirmed']:
+                if "confirmed" in request.form and \
+                        request.form['token'] == login_session['token']:
                     aircraft = session.query(Aircraft).filter_by(
                         id=aircraft_id).first()
                     session.delete(aircraft)
                     session.commit()
                     return redirect(url_for('showAircraft', man_id=man_id))
+                return redirect(url_for(
+                    'deleteAircraft', man_id=man_id, aircraft_id=aircraft_id))
 
     return redirect(url_for('login'))
 
@@ -359,9 +366,10 @@ def newAircraft(man_id):
         if request.method == "GET":
             return render_template(
                 'new_aircraft.html', pageTitle="Create new Aircraft",
-                man_id=man_id)
+                man_id=man_id, TOKEN=login_session['token'])
         else:
-            if request.form['name']:
+            if request.form['name'] and \
+                    request.form['token'] == login_session['token']:
                 manufacturer = session.query(Manufacturer).filter_by(
                     id=man_id).first()
                 newAc = Aircraft(
@@ -393,13 +401,24 @@ def manufacturersJson():
 
 
 @app.route('/manufacturers/<int:man_id>/json')
-def aircraftJson(man_id):
+def allAircraftJson(man_id):
     """Returns a json representation of all aircraft built by a certain
     manufacturer.
     No authentication or authorisation.
     """
     aircraft = session.query(Aircraft).filter_by(manufacturer_id=man_id).all()
     return jsonify(Aircraft=[i.serialize for i in aircraft])
+
+
+@app.route('/manufacturers/<int:man_id>/<int:aircraft_id>/json')
+def oneAircraftJson(man_id, aircraft_id):
+    """Returns a json representation of one aircraft built by a certain
+    manufacturer.
+    No authentication or authorisation.
+    """
+    aircraft = session.query(Aircraft).filter_by(
+        manufacturer_id=man_id, id=aircraft_id).first()
+    return jsonify(Aircraft=aircraft.serialize)
 
 
 # USER OPERATIONS #
@@ -431,6 +450,6 @@ def getUserID(email):
 
 
 if __name__ == '__main__':
-    app.secret_key = 'super_secret_key'
+    app.secret_key = '5D6822E04D9D8A809CF2D20C444C5F2C21C064DB741E5D6C79C702C6'
     app.debug = True
     app.run(host='0.0.0.0', port=8000)

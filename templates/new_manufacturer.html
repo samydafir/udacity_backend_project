@@ -3,9 +3,11 @@
 
 <form method="POST" action="/manufacturers/new">
   <label for="name">Manufacturer name</label>
+  <br>
   	<input type="text" name="name">
     <br>
     <br>
+    <input type="hidden" name="token" value="{{TOKEN}}">
     <input type="submit" class="btn btn-secondary" value="submit">
 </form>
 {% endblock %}

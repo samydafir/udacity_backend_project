@@ -7,12 +7,13 @@
 {% for ac in aircraft %}
 <div>
   <h3>{{ac.name}}</h3>
+  {% if ac.picture %}
   <a href="{{ac.picture}}">
     <img src="{{ac.picture}}" alt="aircraft picture" height=100px style="float:right;">
   </a>
+  {% endif %}
   <ul>
     <li>Name: {{ac.name}}</li>
-    <li>ID: {{ac.id}}</li>
     <li>Description: {{ac.description}}</li>
     <li>Price: US$ {{ac.price}}</li>
     <li>Range: {{ac.range}} nm</li>
